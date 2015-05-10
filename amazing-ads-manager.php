@@ -16,33 +16,33 @@ if ( ! defined( 'WPINC' ) ) {
 }
 //Ads sizes array
 $adsizes = array(
-								#   Google Adsense Display and Text Unit Sizes
-									'970x90'  => 'Large Leaderboard (970x90)', 
-									'728x90'  => 'Leaderboard (728x90)',
-									'468x60'  => 'Banner (468x60)',
-									'336x280' => 'Large Rectangle (336x280)',
-									'320x100' => 'Large Mobile Banner (320x100)',
-									'320x50'  => 'Mobile Banner (320x50)',
-									'300x600' => 'Large Skyscraper (300x600)',
-									'300x250' => 'Medium Rectangle (300x250)',
-									'250x250' => 'Square (250x250)',
-									'234x60'  => 'Half Banner (234x60)',
-									'200x200' => 'Small Square (200x200)',
-									'180x150' => 'Small Rectangle (180x150)',
-									'160x600' => 'Wide Skyscraper (160x600)',
-									'125x125' => 'Button (125x125)',
-									'120x600' => 'Skyscraper (120x600)',
-									'120x240' => 'Vertical Banner (120x240)',
-								
-								#   Google Adsense Link Unit Sizes
-									'728x15'  => 'Displays 4 links (728x15)',
-									'468x15'  => 'Displays 4 links (468x15)',
-									'200x90'  => 'Displays 3 links (200x90)',
-									'180x90'  => 'Displays 3 links (180x90)',
-									'160x90'  => 'Displays 3 links (160x90)',
-									'120x90'  => 'Displays 3 links (120x90)',
-								
-								);
+	#   Google Adsense Display and Text Unit Sizes
+		'970x90'  => 'Large Leaderboard (970x90)', 
+		'728x90'  => 'Leaderboard (728x90)',
+		'468x60'  => 'Banner (468x60)',
+		'336x280' => 'Large Rectangle (336x280)',
+		'320x100' => 'Large Mobile Banner (320x100)',
+		'320x50'  => 'Mobile Banner (320x50)',
+		'300x600' => 'Large Skyscraper (300x600)',
+		'300x250' => 'Medium Rectangle (300x250)',
+		'250x250' => 'Square (250x250)',
+		'234x60'  => 'Half Banner (234x60)',
+		'200x200' => 'Small Square (200x200)',
+		'180x150' => 'Small Rectangle (180x150)',
+		'160x600' => 'Wide Skyscraper (160x600)',
+		'125x125' => 'Button (125x125)',
+		'120x600' => 'Skyscraper (120x600)',
+		'120x240' => 'Vertical Banner (120x240)',
+	
+	#   Google Adsense Link Unit Sizes
+		'728x15'  => 'Displays 4 links (728x15)',
+		'468x15'  => 'Displays 4 links (468x15)',
+		'200x90'  => 'Displays 3 links (200x90)',
+		'180x90'  => 'Displays 3 links (180x90)',
+		'160x90'  => 'Displays 3 links (160x90)',
+		'120x90'  => 'Displays 3 links (120x90)',
+	
+	);
 if(!class_exists('AmazingAds')) {
 	class AmazingAds {
 		var $adsizes;
