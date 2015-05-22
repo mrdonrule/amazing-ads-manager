@@ -27,20 +27,20 @@ Amazing Ads Manager is easy to use plugin providing a flexible logic of displayi
 
 
 ## Changelog 
-# 0.0.2
+### 0.0.2
 * Bug fix
 * Added Input sanitizer 
 
-# 0.0.1 
+### 0.0.1 
 * Initial Version.
 
 ## Upgrade Notice
 
-# 0.0.2
+### 0.0.2
 * Bug fix
 * Added Input sanitizer 
 
-# 0.0.1 
+### 0.0.1 
 No upgrade yet, Initial Version.
 
 # Licence
