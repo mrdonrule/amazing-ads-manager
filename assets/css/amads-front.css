@@ -1,0 +1,58 @@
+	/*	
+	*	Amazing Ads Manager BackEnd Css File
+	*	---------------------------------------------------------------------
+	* 	@version	0.0.2
+	* 	Author: Amazing Themes
+	*	Author URI: http://naijadomains.com/amazing-themes/
+	*	---------------------------------------------------------------------
+	*	This file contatin backedn style sheet for Amazing Ads Manager
+	*	---------------------------------------------------------------------
+	*/
+.list-amads { 
+	list-style:none;
+	padding:0px !important;
+	margin:0px;
+	list-style-type:none;
+}
+/* floated left to accommodate 4 ads in sidebar*/
+.list-amads li.amads_125x125 {
+	float:left;
+	padding:2px;
+	
+}
+.list-amads li.amads_250x250 {
+	max-width:250px;
+}
+.list-amads li.amads_728x90,.list-amads li.amads_728x15 {
+	max-width:728px;
+}
+.list-amads li.amads_970x90 {
+	max-width:970px;
+}
+.list-amads li.amads_468x60,.list-amads li.amads_468x15 {
+	max-width:468px;
+}
+  .list-amads li.amads_336x280 {
+	max-width:336px;
+}
+.list-amads li.amads_320x100 {
+	max-width:320px;
+}
+.list-amads li.amads_300x600,.list-amads li.amads_300x250 {
+	max-width:300px;
+}
+.list-amads li.amads_234x60{
+	max-width:234px;
+}
+.list-amads li.amads_200x200,.list-amads li.amads_200x90 {
+	max-width:200px;
+}
+.list-amads li.amads_180x150,.list-amads li.amads_180x90 {
+	max-width:180px;
+}
+.list-amads li.amads_160x600,.list-amads li.amads_160x90 {
+	max-width:160px;
+}
+.list-amads li.amads_120x600 ,.list-amads li.amads_120x240,.list-amads li.amads_120x90{
+	max-width:120px;
+}

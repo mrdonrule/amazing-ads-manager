@@ -3,7 +3,7 @@
 Plugin Name: Amazing Ads Manager
 Plugin URI: http://naijadomains.com/amazing-themes/plugin/adsManager/
 Description: Amazing Ads Manager is easy to use plugin providing a flexible logic of displaying advertisements, Randomly and Customizable  display of advertisements on single post page or category archive page by category (categories) or custom post types. Amazing Ads Mnager includes all Google Adsense Display and Text Unit Sizes.
-Version: 0.0.1
+Version: 0.0.2
 Author: Amazing Themes
 Author URI: http://naijadomains.com/amazing-themes/
 License:           GPL-2.0+
@@ -16,33 +16,33 @@ if ( ! defined( 'WPINC' ) ) {
 }
 //Ads sizes array
 $adsizes = array(
-	#   Google Adsense Display and Text Unit Sizes
-		'970x90'  => 'Large Leaderboard (970x90)', 
-		'728x90'  => 'Leaderboard (728x90)',
-		'468x60'  => 'Banner (468x60)',
-		'336x280' => 'Large Rectangle (336x280)',
-		'320x100' => 'Large Mobile Banner (320x100)',
-		'320x50'  => 'Mobile Banner (320x50)',
-		'300x600' => 'Large Skyscraper (300x600)',
-		'300x250' => 'Medium Rectangle (300x250)',
-		'250x250' => 'Square (250x250)',
-		'234x60'  => 'Half Banner (234x60)',
-		'200x200' => 'Small Square (200x200)',
-		'180x150' => 'Small Rectangle (180x150)',
-		'160x600' => 'Wide Skyscraper (160x600)',
-		'125x125' => 'Button (125x125)',
-		'120x600' => 'Skyscraper (120x600)',
-		'120x240' => 'Vertical Banner (120x240)',
-	
-	#   Google Adsense Link Unit Sizes
-		'728x15'  => 'Displays 4 links (728x15)',
-		'468x15'  => 'Displays 4 links (468x15)',
-		'200x90'  => 'Displays 3 links (200x90)',
-		'180x90'  => 'Displays 3 links (180x90)',
-		'160x90'  => 'Displays 3 links (160x90)',
-		'120x90'  => 'Displays 3 links (120x90)',
-	
-	);
+								#   Google Adsense Display and Text Unit Sizes
+									'970x90'  => 'Large Leaderboard (970x90)', 
+									'728x90'  => 'Leaderboard (728x90)',
+									'468x60'  => 'Banner (468x60)',
+									'336x280' => 'Large Rectangle (336x280)',
+									'320x100' => 'Large Mobile Banner (320x100)',
+									'320x50'  => 'Mobile Banner (320x50)',
+									'300x600' => 'Large Skyscraper (300x600)',
+									'300x250' => 'Medium Rectangle (300x250)',
+									'250x250' => 'Square (250x250)',
+									'234x60'  => 'Half Banner (234x60)',
+									'200x200' => 'Small Square (200x200)',
+									'180x150' => 'Small Rectangle (180x150)',
+									'160x600' => 'Wide Skyscraper (160x600)',
+									'125x125' => 'Button (125x125)',
+									'120x600' => 'Skyscraper (120x600)',
+									'120x240' => 'Vertical Banner (120x240)',
+								
+								#   Google Adsense Link Unit Sizes
+									'728x15'  => 'Displays 4 links (728x15)',
+									'468x15'  => 'Displays 4 links (468x15)',
+									'200x90'  => 'Displays 3 links (200x90)',
+									'180x90'  => 'Displays 3 links (180x90)',
+									'160x90'  => 'Displays 3 links (160x90)',
+									'120x90'  => 'Displays 3 links (120x90)',
+								
+								);
 if(!class_exists('AmazingAds')) {
 	class AmazingAds {
 		var $adsizes;
@@ -111,13 +111,16 @@ if(!class_exists('AmazingAds')) {
 			}
 			//initialize from style
 			public function front_style(){
-				wp_enqueue_style('amads-admin-style', plugins_url('/assets/css/amads-front.css', __FILE__));
+				if(is_admin()){
+				wp_enqueue_style('amads-admin-style', plugins_url('/assets/css/amads.css', __FILE__));
+				}
+				else {
+					wp_enqueue_style('amads-admin-style', plugins_url('/assets/css/amads-front.css', __FILE__));
+				}
 			}
+			
 			// initialize admin 
 		public function init_admin() {
-				load_plugin_textdomain( 'amads-manager', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-
-			wp_enqueue_style('amads-admin-style', plugins_url('/assets/css/amads.css', __FILE__));
 				// Localize wp version
 				global $wp_version;
 				if(version_compare($wp_version, '3.5', '<'))
@@ -167,6 +170,7 @@ if(!class_exists('AmazingAds')) {
 		
 				wp_enqueue_script('amads-admin-js', plugins_url('/assets/js/amads.js', __FILE__));
 				
+				
 					if(function_exists( 'wp_enqueue_media' )){
 							wp_enqueue_media();
 						}else{
@@ -189,6 +193,22 @@ if(!class_exists('AmazingAds')) {
 		public function create_meta_box(){
 			global $post;
 			$custom_fields = get_post_custom($post->ID);
+				if(!isset($custom_fields['ad_sizes'][0])){
+					$custom_fields['ad_sizes'][0]="";
+				}
+				if(!isset($custom_fields['ad_type'][0])){
+					$custom_fields['ad_type'][0]="";
+				}
+				if(!isset($custom_fields['amads_link'][0])){
+					$custom_fields['amads_link'][0]="";
+				}
+				if(!isset($custom_fields['amads_image'][0])){
+					$custom_fields['amads_image'][0]="";
+				}
+				if(!isset($custom_fields['amads_codes'][0])){
+					$custom_fields['amads_codes'][0]="";
+				}
+				
 			?>
             <div class="input-holder">
                 <label for="ads-size">Select Ads Size</label>
@@ -251,10 +271,13 @@ if(!class_exists('AmazingAds')) {
 		public function update_custom_meta_fields()	{
 
 			//disable autosave,so custom fields will not be empty
-			if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
+		
+			if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+			
 		        return $post_id;
 
 				global $post;
+				if(isset($_POST['post_type'])=="amadsmananger"){
 				switch($_POST['ad_type']){
 					case "image":update_post_meta($post->ID, "amads_image", trim($_POST["amads_image"]));
 								update_post_meta($post->ID, "amads_link", trim($_POST["amads_link"]));
@@ -268,6 +291,7 @@ if(!class_exists('AmazingAds')) {
 			update_post_meta($post->ID, "amads_title", trim($_POST["post_title"]));
 			update_post_meta($post->ID, "amads_shortcode", 
 							'[amads id="'.$post->ID.'" size="'.trim($_POST["ad_sizes"]).'" title="'.$_POST['post_title'] .'"]');
+				}
 
 		}
 		// create Shortcode

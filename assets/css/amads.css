@@ -1,0 +1,50 @@
+	/*	
+	*	Amazing Ads Manager BackEnd Css File
+	*	---------------------------------------------------------------------
+	* 	@version	0.0.2
+	* 	Author: Amazing Themes
+	*	Author URI: http://naijadomains.com/amazing-themes/
+	*	---------------------------------------------------------------------
+	*	This file contatin backedn style sheet for Amazing Ads Manager
+	*	---------------------------------------------------------------------
+	*/
+#amads-meta-box h3.hndle span {
+	background:url(../images/v-logo_meta.png) no-repeat;
+  	padding-left: 23px;
+  	display: block;
+}
+#amads-meta-box .input-holder { 
+	display:block;	
+	border-bottom:1px solid #f2f2f2;
+	padding:20px 0px;
+}
+#amads-meta-box .input-holder label {
+	width:20%;
+	font-weight:bolder;
+	padding-left:30px;
+	vertical-align:top;
+	display:block; 
+	float:left;	
+}
+#amads-meta-box .input-holder textarea {
+	width:40%;
+	display:block;
+	min-height:120px;
+}
+#amads-meta-box .input-holder input[type="text"],#amads-meta-box .input-holder select {
+	width:200px !important;
+}
+#amads-meta-box .input-holder .amads-image-preview {
+	border:2px solid #f2f2f2;
+	background:#CCC;
+	padding:5px;
+	min-height:50px; 
+	 position: relative;
+	 text-align:center;
+}
+#amads-meta-box #image-ad-type, #amads-meta-box #codes,#amads-by-ids {
+	display:none;	
+}
+i.amads-own-icon {
+    background-image:url(../images/icon.png)
+}
