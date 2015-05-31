@@ -30,6 +30,8 @@ Amazing Ads Manager is easy to use plugin providing a flexible logic of displayi
 
 ### 0.0.3 
 * Compatibility fix with wordpress 4.2.2
+
+
 ### 0.0.2
 * Bug fix
 * Added Input sanitizer 
@@ -41,6 +43,7 @@ Amazing Ads Manager is easy to use plugin providing a flexible logic of displayi
 
 ### 0.0.3 
 * Compatibility fix with wordpress 4.2.2
+
 
 ### 0.0.2
 * Bug fix
