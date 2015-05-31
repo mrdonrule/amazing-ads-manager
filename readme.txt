@@ -51,6 +51,10 @@ Features Of Amazing Ads Manager:
 1. Ad setting on widget in Wordpress 4.2.1
 
 == Changelog ==
+
+= 0.0.3 =
+* Compatibility fix with wordpress 4.2.2
+
 = 0.0.2 =
 * Bug fix
 * Added Input sanitizer 
@@ -59,6 +63,9 @@ Features Of Amazing Ads Manager:
 * Initial Version.
 
 == Upgrade Notice ==
+
+= 0.0.3 =
+* Compatibility fix with wordpress 4.2.2
 
 = 0.0.2 =
 * Bug fix

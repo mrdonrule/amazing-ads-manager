@@ -3,7 +3,7 @@
 Plugin Name: Amazing Ads Manager
 Plugin URI: http://naijadomains.com/amazing-themes/plugin/adsManager/
 Description: Amazing Ads Manager is easy to use plugin providing a flexible logic of displaying advertisements, Randomly and Customizable  display of advertisements on single post page or category archive page by category (categories) or custom post types. Amazing Ads Mnager includes all Google Adsense Display and Text Unit Sizes.
-Version: 0.0.2
+Version: 0.0.3
 Author: Amazing Themes
 Author URI: http://naijadomains.com/amazing-themes/
 License:           GPL-2.0+
@@ -48,7 +48,7 @@ if(!class_exists('AmazingAds')) {
 		var $adsizes;
 		//constants
 		const CAPABILITY = 'manage_options';
-		const VERSION = '0.0.1';
+		const VERSION = '0.0.3';
 		const VERSION_FIELD_NAME = 'amAdsmanager_var';
 		const post_type ="amAdsMananger";
 		//Constructer
@@ -276,8 +276,10 @@ if(!class_exists('AmazingAds')) {
 			
 		        return $post_id;
 
-				global $post;
-				if(isset($_POST['post_type'])=="amadsmananger"){
+				global $post,$typenow;
+				
+		    if ( $typenow=='amadsmananger' && isset($_POST['ad_type'])) {
+				
 				switch($_POST['ad_type']){
 					case "image":update_post_meta($post->ID, "amads_image", trim($_POST["amads_image"]));
 								update_post_meta($post->ID, "amads_link", trim($_POST["amads_link"]));

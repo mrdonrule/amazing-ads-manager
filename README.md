@@ -1,4 +1,4 @@
-# amazing-ads-manager
+# Amazing Ads Manager
 Amazing Ads Manager is easy to use plugin providing a flexible logic of displaying advertisements, Randomly and Customizable  display of advertisements on single post page or category archive page by category (categories) or custom post types. Amazing Ads Mnager includes all Google Adsense Display and Text Unit Sizes.
 
 ## Features Of Amazing Ads Manager:
@@ -27,23 +27,30 @@ Amazing Ads Manager is easy to use plugin providing a flexible logic of displayi
 
 
 ## Changelog 
-# 0.0.2
+
+### 0.0.3 
+* Compatibility fix with wordpress 4.2.2
+
+
+### 0.0.2
 * Bug fix
 * Added Input sanitizer 
 
-# 0.0.1 
+### 0.0.1 
 * Initial Version.
 
 ## Upgrade Notice
 
-# 0.0.2
+### 0.0.3 
+* Compatibility fix with wordpress 4.2.2
+
+### 0.0.2
 * Bug fix
 * Added Input sanitizer 
 
-# 0.0.1 
+### 0.0.1 
 No upgrade yet, Initial Version.
 
 # Licence
 
 This plugin is released under the GPL - you can use it free of charge on your personal or commercial blog. Make sure to submit back to the project any changes that you make!
-
