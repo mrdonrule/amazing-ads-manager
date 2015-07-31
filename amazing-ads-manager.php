@@ -3,8 +3,9 @@
 Plugin Name: Amazing Ads Manager
 Plugin URI: http://naijadomains.com/amazing-themes/plugin/adsManager/
 Description: Amazing Ads Manager is easy to use plugin providing a flexible logic of displaying advertisements, Randomly and Customizable  display of advertisements on single post page or category archive page by category (categories) or custom post types. Amazing Ads Mnager includes all Google Adsense Display and Text Unit Sizes.
-Version: 0.0.3
+Version: 0.0.4
 Author: Amazing Themes
+@Compatibility WP 3.5+
 Author URI: http://naijadomains.com/amazing-themes/
 License:           GPL-2.0+
 License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -16,45 +17,46 @@ if ( ! defined( 'WPINC' ) ) {
 }
 //Ads sizes array
 $adsizes = array(
-								#   Google Adsense Display and Text Unit Sizes
-									'970x90'  => 'Large Leaderboard (970x90)', 
-									'728x90'  => 'Leaderboard (728x90)',
-									'468x60'  => 'Banner (468x60)',
-									'336x280' => 'Large Rectangle (336x280)',
-									'320x100' => 'Large Mobile Banner (320x100)',
-									'320x50'  => 'Mobile Banner (320x50)',
-									'300x600' => 'Large Skyscraper (300x600)',
-									'300x250' => 'Medium Rectangle (300x250)',
-									'250x250' => 'Square (250x250)',
-									'234x60'  => 'Half Banner (234x60)',
-									'200x200' => 'Small Square (200x200)',
-									'180x150' => 'Small Rectangle (180x150)',
-									'160x600' => 'Wide Skyscraper (160x600)',
-									'125x125' => 'Button (125x125)',
-									'120x600' => 'Skyscraper (120x600)',
-									'120x240' => 'Vertical Banner (120x240)',
-								
-								#   Google Adsense Link Unit Sizes
-									'728x15'  => 'Displays 4 links (728x15)',
-									'468x15'  => 'Displays 4 links (468x15)',
-									'200x90'  => 'Displays 3 links (200x90)',
-									'180x90'  => 'Displays 3 links (180x90)',
-									'160x90'  => 'Displays 3 links (160x90)',
-									'120x90'  => 'Displays 3 links (120x90)',
-								
-								);
+		#   Google Adsense Display and Text Unit Sizes
+			'970x90'  => 'Large Leaderboard (970x90)', 
+			'728x90'  => 'Leaderboard (728x90)',
+			'468x60'  => 'Banner (468x60)',
+			'336x280' => 'Large Rectangle (336x280)',
+			'320x100' => 'Large Mobile Banner (320x100)',
+			'320x50'  => 'Mobile Banner (320x50)',
+			'300x600' => 'Large Skyscraper (300x600)',
+			'300x250' => 'Medium Rectangle (300x250)',
+			'250x250' => 'Square (250x250)',
+			'234x60'  => 'Half Banner (234x60)',
+			'200x200' => 'Small Square (200x200)',
+			'180x150' => 'Small Rectangle (180x150)',
+			'160x600' => 'Wide Skyscraper (160x600)',
+			'125x125' => 'Button (125x125)',
+			'120x600' => 'Skyscraper (120x600)',
+			'120x240' => 'Vertical Banner (120x240)',
+		
+		#   Google Adsense Link Unit Sizes
+			'728x15'  => 'Displays 4 links (728x15)',
+			'468x15'  => 'Displays 4 links (468x15)',
+			'200x90'  => 'Displays 3 links (200x90)',
+			'180x90'  => 'Displays 3 links (180x90)',
+			'160x90'  => 'Displays 3 links (160x90)',
+			'120x90'  => 'Displays 3 links (120x90)',
+		
+		);
 if(!class_exists('AmazingAds')) {
 	class AmazingAds {
-		var $adsizes;
+		var $adsizesm,$amads_option=array();
 		//constants
 		const CAPABILITY = 'manage_options';
-		const VERSION = '0.0.3';
+		const VERSION = '0.0.4';
 		const VERSION_FIELD_NAME = 'amAdsmanager_var';
 		const post_type ="amAdsMananger";
 		//Constructer
 		public function __construct() {
 			global $adsizes;
-			$this->adsizes =$adsizes;		
+			$this->adsizes =$adsizes;
+					
 
 			//action hooks
 			add_action( 'admin_init', array( &$this,'init_admin') );
@@ -65,11 +67,16 @@ if(!class_exists('AmazingAds')) {
 			add_action( 'add_meta_boxes', array( &$this, 'add_custom_box' ) );			
 			add_action('admin_head',array(&$this,'getamadsData'));
 			add_action('init',array(&$this,'front_style'));
+			add_action( 'admin_menu', array( &$this,'add_amAds_sub_pages' ) );
 			//filters
 			add_filter( 'manage_amadsmananger_posts_columns', array( &$this, 'add_custom_columns' ) );
 			add_filter('post_updated_messages', array( &$this, 'amadsmananger_updated_messages' ) );
 			add_filter( "mce_external_plugins",  array( &$this, 'amads_add_tinymce_plugin' ) );
 		    add_filter( 'mce_buttons',  array( &$this, 'amads_register_my_tc_button' ) );
+			add_filter('the_content', array( &$this, 'amads_a_content' )); 
+			add_filter('the_content', array( &$this, 'amads_b_content' )); 
+
+
 			// shortcodes
 			add_shortcode( 'amads',  array( &$this, 'amads_shortcode' ) );
 		}
@@ -107,7 +114,122 @@ if(!class_exists('AmazingAds')) {
 			);
 			
 			register_post_type( self::post_type, $amAd_args );
+			
 
+			}
+			/*
+			*	amadsDisplay
+			*	@param int $id,limit string $size,$order
+			*	@since 0.0.4
+			*/
+			public function amadsDisplay($size,$order,$limit){
+				
+				//set limit to 1 as default
+				$limit=(!empty($limit)||!int($limit))? $limit:1;
+				// default size
+				$size=(!empty($size))? $size:'320x100';
+						if($order=="rand"){
+							$amads_args = array( 
+							  'post_type' => 'amadsmananger', 			
+							  'orderby' => 'rand',
+							 'meta_key'		=> 'ad_sizes',
+							  'showposts'=>$limit,
+							  'meta_value'	=> $size,
+							  'post_status'=>'publish'
+							);
+						}
+						if($order=="DESC"){
+							$amads_args = array( 
+							'post_type' => 'amadsmananger', 
+							'order' => 'DESC',
+							'meta_key'		=> 'ad_sizes',
+							'showposts'=>$limit,
+							'meta_value'	=> $size,
+							'post_status'=>'publish'
+							);
+						}
+						if($order=="ASC"){						
+							$amads_args = array( 
+							'post_type' => 'amadsmananger', 
+							'order' => 'ASC',
+							'meta_key'		=> 'ad_sizes',
+							'showposts'=>$limit,
+							'meta_value'	=> $size,
+							'post_status'=>'publish'
+							);
+						}?>
+                        <ul class="list-amads">
+                         <?php 	
+                            query_posts($amads_args);
+                            while (have_posts()) : the_post();
+                            		if ( post_custom('ad_type') ) {
+
+                            if( post_custom('ad_type')=="image"){?>
+                         		   <li class="amads_<?php echo $size;?>">
+                           		 <a href="<?php echo post_custom('amads_link');?>" id="<?php echo the_ID() ;?>" class="amadas-cl" target="_blank" title="<?php echo the_title();?>"/>
+                            <img src="<?php echo post_custom('amads_image');?>" alt="<?php echo the_title();?>" />
+                            </a></li>
+                            <?php	}
+                            if( post_custom('ad_type')=="codes"){?>
+                            <li class="amads_<?php echo $size;?>" id="<?php echo the_ID();?>">
+                            <?php echo post_custom('amads_codes');?>
+                            </li>
+                            <?php	} 
+                            }
+                            endwhile;
+                            wp_reset_query();
+                            ?>                            
+                         </ul>	
+                <?php
+				
+			}
+			/*
+			*	amads_b_content
+			*	@param bigtext $amads_data_content
+			*	@since 0.0.4
+			*/
+			public function amads_b_content($amads_data_content){
+				//global $post;
+				$this->amads_option=get_option(self::post_type);
+				if($this->amads_option['amads-bppc-e']==true){
+					$newcontent=$this->amadsDisplay($this->amads_option['amads-as'],$this->amads_option['amads-adot'],$this->amads_option['amads-limit']);
+					return  $newcontent.$amads_data_content;
+				}else {
+					return $amads_data_content;
+				}
+				
+			}
+			/*
+			*	amads_after_content
+			*	@param bigtext $amads_data_content
+			*	@since 0.0.4
+			*/
+			public function amads_a_content($amads_data_content){
+				//global $post;
+				$this->amads_option=get_option(self::post_type);
+				if($this->amads_option['amads-appc-e']==true){
+					$newcontent=$this->amadsDisplay($this->amads_option['amads-aas'],$this->amads_option['amads-aadot'],$this->amads_option['amads-alimit']);
+					return  $amads_data_content.$newcontent;
+				}else {
+					return $amads_data_content;
+				}
+				
+			}
+			/*
+			*	settingDefault
+			*	@param null
+			*	@since 0.0.4
+			*/
+			public function settingDefault(){
+				return $default=array(	'amads-bppc-e' =>'',
+										'amads-limit' =>'',
+										'amads-adot' => '',
+										'amads-as' => '',
+										'amads-appc-e' =>'',
+										'amads-alimit' =>'',
+										'amads-aadot' => '',
+										'amads-aas' => ''
+									);
 			}
 			//initialize from style
 			public function front_style(){
@@ -115,26 +237,149 @@ if(!class_exists('AmazingAds')) {
 				wp_enqueue_style('amads-admin-style', plugins_url('/assets/css/amads.css', __FILE__));
 				}
 				else {
-					wp_enqueue_style('amads-admin-style', plugins_url('/assets/css/amads-front.css', __FILE__));
+					wp_enqueue_style('amads-front-style', plugins_url('/assets/css/amads-front.css', __FILE__));			
 				}
 			}
 			
+			
+			function my_admin_error_notice() {
+					$class = "update-nag";
+					$message = "This plugin will not work properly with this WordPress version, Update your WordPress to latest version";
+						echo"<div class=\"$class\"> <p>$message</p></div>"; 
+				}
+
 			// initialize admin 
 		public function init_admin() {
 				// Localize wp version
-				global $wp_version;
+				global $typenow, $wp_version;
 				if(version_compare($wp_version, '3.5', '<'))
 				{
-					$params['wp_version']="wp_ver3_5_low";
+					add_action( 'admin_notices', array(&$this,'my_admin_error_notice')); 
+				
+				}		
+			 	wp_enqueue_script('amads-admin-js', plugins_url('/assets/js/amads.js', __FILE__));
+				if(!get_option(self::post_type)){
+				add_option(self::post_type,$this->settingDefault());
 				}
-				if(version_compare($wp_version, '3.5', '>='))
-				{
-					$params['wp_version']="wp_ver3_5_up";
+				if(function_exists( 'wp_enqueue_media' )){
+								wp_enqueue_media();
+							}else{
+								wp_enqueue_style('thickbox');
+								wp_enqueue_script('media-upload');
+								wp_enqueue_script('thickbox');					
 				}
-			wp_localize_script('jquery', 'amAds', $params );
-  		  
 		}
-		 //add filter to ensure the text Ad message is displayed when user updates an Ad 
+		/*
+		*	add Amazing Ads Manager to admin menu
+		*	since 0.0.4
+		*/
+		
+		public function add_amAds_sub_pages() {
+			$addnew = add_submenu_page( 'edit.php?post_type=amadsmananger',
+										__( 'Ads Settings' ),
+										__( 'Ads Settings' )
+										,self::CAPABILITY,
+										'ads-setting',array(&$this, 'amAds_setting')
+									);
+							}
+		public function amAds_setting(){		
+			if(isset($_POST['sec_code'])){
+				$amads_option =$_POST;
+				unset($amads_option['sec_code'],$amads_option['amads_save']);
+				update_option(self::post_type,$amads_option);
+			}
+				$this->amads_option=get_option(self::post_type);
+			?>
+			<div class='amadsWrapper'>
+				<div class="amads-header"><h2>Amazing Ads Manager Settings</h2></div>
+                <form name="amads-settings" id="amads-settings" method="post" action="edit.php?post_type=amadsmananger&page=ads-setting">
+                <div class="sub-title">Auto Insert Ads before Post/Page Content</div>
+                <ul class="input-group">
+                <li>
+                <label for="amads-bppc-e">Enable</label>
+                <input type="checkbox" name="amads-bppc-e" id="amads-bppc-e" 
+				<?php 					
+						echo ($this->amads_option['amads-bppc-e']==true)? 'checked': ''; 
+				?> value="true"/>
+                </li>
+                 <li>
+                <label for="amads-limit">Ads Limit</label>
+                <input type="text" name="amads-limit" id="amads-limit" value="<?php echo $this->amads_option['amads-limit'];?>" />
+                </li>
+                 <li>
+                <label for="amads-adot">Ads Display Oder Type</label>
+                <select name="amads-adot" id="amads-adot">
+                <option value="">Select</option>
+                <option value="rand" <?php if($this->amads_option['amads-adot']=="rand"){echo 'selected="selected"';} ?>>Show Ads Randomly</option>
+                 <option value="DESC"  <?php if($this->amads_option['amads-adot']=="DESC"){echo 'selected="selected"';} ?>>Show By Latest Ad</option>
+                 <option value="ASC"  <?php if($this->amads_option['amads-adot']=="ASC"){echo 'selected="selected"';} ?>>Show By Oldest Ad</option>
+               
+                </select>
+                </li>
+                 <li>
+                <label for="amads-as">Ads Size</label>
+                 <select name="amads-as" id="amads-as">
+                 <option value="">Select</option>
+                	 <?php foreach($this->adsizes as $key => $val){
+                            echo '<option value="'.$key.'"';
+                            if($this->amads_option['amads-as']==$key)
+                            {
+                                echo 'selected';
+                            } 
+                            echo '>'.$val.'</option>';
+                        } 
+                        ?>         
+                </select>
+                </li>
+                <div class="sub-title">Auto Insert Ads After Post/Page Content</div>
+                <ul class="input-group">
+                <li>
+                <label for="amads-appc-e">Enable</label>
+                <input type="checkbox" name="amads-appc-e" id="amads-appc-e" 
+				<?php 					
+						echo ($this->amads_option['amads-appc-e']==true)? 'checked': ''; 
+				?> value="true"/>
+                </li>
+                 <li>
+                <label for="amads-alimit">Ads Limit</label>
+                <input type="text" name="amads-alimit" id="amads-alimit" value="<?php echo $this->amads_option['amads-alimit'];?>" />
+                </li>
+                 <li>
+                <label for="amads-aadot">Ads Display Oder Type</label>
+                <select name="amads-aadot" id="amads-aadot">
+                <option value="">Select</option>
+                <option value="rand" <?php if($this->amads_option['amads-aadot']=="rand"){echo 'selected="selected"';} ?>>Show Ads Randomly</option>
+                 <option value="DESC"  <?php if($this->amads_option['amads-aadot']=="DESC"){echo 'selected="selected"';} ?>>Show By Latest Ad</option>
+                 <option value="ASC"  <?php if($this->amads_option['amads-aadot']=="ASC"){echo 'selected="selected"';} ?>>Show By Oldest Ad</option>
+               
+                </select>
+                </li>
+                 <li>
+                <label for="amads-aas">Ads Size</label>
+                 <select name="amads-aas" id="amads-aas">
+                 <option value="">Select</option>
+                	 <?php foreach($this->adsizes as $key => $val){
+                            echo '<option value="'.$key.'"';
+                            if($this->amads_option['amads-aas']==$key)
+                            {
+                                echo 'selected';
+                            } 
+                            echo '>'.$val.'</option>';
+                        } 
+                        ?>         
+                </select>
+                </li>
+                <li>
+                 <label for="amads_save"> </label>
+                   <input type="hidden" name="sec_code" id="sec_code" value="amads" />
+                 <input type="submit" name="amads_save" id="amads_save" class="button button-primary button-large" value="Save Setting" /><span>
+				 <?php if(isset($_POST['amads_save'])){ echo "Saved"; } ?></span></li>
+                </ul>
+                </form>
+			</div>
+			
+		<?php }
+			 //add filter to ensure the text Ad message is displayed when user updates an Ad 
 
 			public function amadsmananger_updated_messages( $messages ) {
 			  global $post, $post_ID;
@@ -158,37 +403,18 @@ if(!class_exists('AmazingAds')) {
 			}
 		//create custom column shortcode
 		public function add_custom_columns( $defaults ) {
-
 			unset($defaults['date'],$defaults['thumbnail']);			
 		    $defaults['amads_shortcode'] = 'Shortcode';
 			$defaults['date'] = 'Date';
 		    return $defaults;
 
 		}
-		// enqueue script for amads
-		public function enqueue_script(){			
-		
-				wp_enqueue_script('amads-admin-js', plugins_url('/assets/js/amads.js', __FILE__));
-				
-				
-					if(function_exists( 'wp_enqueue_media' )){
-							wp_enqueue_media();
-						}else{
-							wp_enqueue_style('thickbox');
-							wp_enqueue_script('media-upload');
-							wp_enqueue_script('thickbox');
-					
-			}
-		}
 		//add meta box in the "Add New Ads" page
 				public function add_custom_box() {
-					global $pagenow,$typenow;
-				
-		    if ( $typenow=='amadsmananger' ) {
-					$this->enqueue_script();
-			}
+					global $pagenow,$typenow;				
 					add_meta_box('amads-meta-box', 'Ads Manager Option', array( &$this, 'create_meta_box'), 'amadsmananger', 'normal', 'high');
 				}
+		
 		// create Custom meta boxes
 		public function create_meta_box(){
 			global $post;
@@ -208,7 +434,7 @@ if(!class_exists('AmazingAds')) {
 				if(!isset($custom_fields['amads_codes'][0])){
 					$custom_fields['amads_codes'][0]="";
 				}
-				
+			
 			?>
             <div class="input-holder">
                 <label for="ads-size">Select Ads Size</label>
@@ -316,7 +542,7 @@ if(!class_exists('AmazingAds')) {
 				if ( post_custom('ad_type') ) {
 						$ad_type = post_custom('ad_type');
 						if($ad_type=="image"){
-							$amads_contnet='<a href="'.post_custom("amads_link").'" target="_blank" title="'.$title.'"/>
+							$amads_contnet='<a href="'.post_custom("amads_link").'" data-amads-id='.$id.' class="amadas-cl" target="_blank" title="'.$title.'"/>
                             	<img src="'.post_custom('amads_image').'" alt="'.$title.'" />
                              </a></li>';
 					}
@@ -326,7 +552,7 @@ if(!class_exists('AmazingAds')) {
 					}
 					endwhile;
 					wp_reset_query();
-					return '<div class="amads_'.$size.'">'.$amads_contnet.'</div>';
+					return '<div data-amads-id='.$id.' class="amads_'.$size.' amadas-cl">'.$amads_contnet.'</div>';
 				}
 			//Shortcode Button on TinyMCE.
 			public function amads_add_tinymce_plugin( $plugin_array ) {
@@ -340,7 +566,6 @@ if(!class_exists('AmazingAds')) {
 			}
 			public function getamadsData() {
          		global $wpdb,$post;
-						
         $querystr = "   SELECT $wpdb->posts.* , $wpdb->postmeta.*
                         FROM $wpdb->posts, $wpdb->postmeta
                         WHERE $wpdb->posts.ID = $wpdb->postmeta.post_id 
@@ -350,23 +575,17 @@ if(!class_exists('AmazingAds')) {
                         ORDER BY $wpdb->posts.ID DESC
                      ";
 			$amadsposts = $wpdb->get_results($querystr);
-			//print_r($amadsposts);
  				echo '<script type="text/javascript">
 			var amadsData=['; 
 			if ( $amadsposts ) 
         {
-			
-			
         foreach ( $amadsposts as $amadsData ) : setup_postdata( $amadsData );
        echo "{text :'".get_post_meta($amadsData->ID, 'amads_title', true)."',value:'".get_post_meta($amadsData->ID, 'amads_shortcode', true)."'},";
         endforeach; 
         }
 		echo "];
 		</script>";
-		
-					
-				
-			}
+	}
 		/*
 		*	Amazing Ad Manager Widget
 		*	@parm null
@@ -382,33 +601,17 @@ if(!class_exists('AmazingAds')) {
 			}
 
 			include_once $file;
-			$class="amAds_Widgets";
-			if (method_exists($class, 'register_widget')) {
-				$caller = new $class;
+			$class=array("amAds_Widgets","amAds_Image_Widgets","amAds_Codes_Widgets");
+			foreach($class as $widgetClass):
+			if (method_exists($widgetClass, 'register_widget')) {
+				$caller = new $widgetClass;
 				$caller->register_widget(); 
 			}
 			else {
-				register_widget($class);
+				register_widget($widgetClass);
 			}
+			endforeach;
 		}
-		/*
-		*	add Amazing Ads Manager to admin menu
-		*	since 0.0.1
-		add_action( 'admin_menu', array( &$this,'add_amAds_sub_pages' ) );
-		public function add_amAds_sub_pages() {
-			
-			// Load save option
-			add_action( 'load-' . $edit, array(&$this, 'amAds_adaManager_admin') );
-		
-			$addnew = add_submenu_page( 'edit.php?post_type=amadsmananger',
-										__( 'Ads Settings' ),
-										__( 'Ads Settings' )
-										,AmazingAds::CAPABILITY,
-										'ads-setting',array(&$this, 'amAds_setting')
-									);
-				// Load save option
-			add_action( 'load-' . $addnew, array(&$this, 'amAds_adaManager_admin'));
-				}*/
 	}
 }
 //init Amazing Ads Manager

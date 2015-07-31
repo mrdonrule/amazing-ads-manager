@@ -1,11 +1,11 @@
 	/*	
-	*	Amazing Ads Manager BackEnd Css File
+	*	Amazing Ads Manager Front Css File
 	*	---------------------------------------------------------------------
-	* 	@version	0.0.2
+	* 	@version	0.0.4
 	* 	Author: Amazing Themes
 	*	Author URI: http://naijadomains.com/amazing-themes/
 	*	---------------------------------------------------------------------
-	*	This file contatin backedn style sheet for Amazing Ads Manager
+	*	This file contatin front style sheet for Amazing Ads Manager
 	*	---------------------------------------------------------------------
 	*/
 .list-amads { 
@@ -13,7 +13,10 @@
 	padding:0px !important;
 	margin:0px;
 	list-style-type:none;
+	display:block;
+	width:100%;
 }
+.list-amads li { display:block; cursor:pointer; }
 /* floated left to accommodate 4 ads in sidebar*/
 .list-amads li.amads_125x125 {
 	float:left;

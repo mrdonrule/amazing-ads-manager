@@ -1,7 +1,7 @@
 	/*	
 	*	Amazing Ads Manager BackEnd JavaScript File
 	*	---------------------------------------------------------------------
-	* 	@version	0.0.2
+	* 	@version	0.0.4
 	* 	Author: Amazing Themes
 	*	Author URI: http://naijadomains.com/amazing-themes/
 	*	---------------------------------------------------------------------

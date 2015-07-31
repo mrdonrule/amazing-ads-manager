@@ -1,7 +1,7 @@
 	/*	
 	*	Amazing Ads Manager BackEnd Css File
 	*	---------------------------------------------------------------------
-	* 	@version	0.0.2
+	* 	@version	0.0.4
 	* 	Author: Amazing Themes
 	*	Author URI: http://naijadomains.com/amazing-themes/
 	*	---------------------------------------------------------------------
@@ -42,9 +42,57 @@
 	 position: relative;
 	 text-align:center;
 }
-#amads-meta-box #image-ad-type, #amads-meta-box #codes,#amads-by-ids {
+#amads-meta-box #image-ad-type, #amads-meta-box #codes {
 	display:none;	
 }
+.amads-by-ids { display:none; }
 i.amads-own-icon {
     background-image:url(../images/icon.png)
 }
+.amad_upload { 
+	display:block;
+	cursor:pointer;
+ }
+ /*
+ *	Amazing Ads Manager Setting
+ *	
+ */
+.amadsWrapper{
+	width:70%;
+	border:1px solid #CFCFCF;
+	background:rgb(255,255,255);
+	font-family:'Open San', sans-serif;
+}
+.amads-header {
+	background:#CFCFCF;
+	border-bottom:1px solid #CFCFCF;
+	padding:15px 20px ;
+}
+.amads-header  h2 {
+	padding:0px;
+	color:#fff;
+	font-size:18px;
+	text-transform:uppercase;
+	margin:0px;
+}
+.sub-title {
+	border-bottom:1px solid #CFCFCF;
+	padding:10px 10px 10px 20px;
+	text-transform:uppercase;
+	font-weight:bold;
+}
+.input-group li {
+	display:block;
+	border-bottom:1px solid #f5f5f5;
+	padding:5px 20px;
+
+}
+.input-group li label { 
+	display:inline-block;
+	border-right:1px solid #CFCFCF;
+	vertical-align:text-bottom;
+	width:30%;	
+}
+.input-group li input,.input-group li select { 
+	margin-left:10px;
+ }
